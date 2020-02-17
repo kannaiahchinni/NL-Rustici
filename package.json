@@ -1,0 +1,11 @@
+{
+  "name": "rustici",
+  "version": "1.0.0",
+  "description": "rustici engine replacement",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Karunakar Medamoni",
+  "license": "ISC"
+}
