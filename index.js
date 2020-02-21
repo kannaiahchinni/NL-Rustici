@@ -97,6 +97,7 @@ var extractFile = (file) => {
 // register endpoints quickly to test
 
 app.get('/api/test/connection', (req, res) => {
+    console.log(' filename '+ req);
     res.json({name: 'Karunakar Medamoni '});
 });
 
