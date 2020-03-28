@@ -27,21 +27,55 @@ const storage = multer.diskStorage({
   var uploadFile = multer({
     storage: storage,
     onFileUploadStart: function (file) {
-      console.log(file.originalname, ' file upload starting ');
     }
   });
 
-var extractFile = (file) => {
+  /**
+   * 
+   * @param {string} path 
+   * Delete the version folder if already existed and create same folder with new course content folder
+   */
+const deleteFolder = (path) => {
+
+    if(fs.existsSync(path)) {
+        fs.readdirSync(path).forEach((f, index) => {
+            var currPath = path+ '/' + f;
+            if(fs.lstatSync(currPath).isDirectory()) {
+                deleteFolder(currPath);
+            }else {
+                fs.unlinkSync(currPath);
+            }
+        });
+        fs.rmdirSync(path);
+    }
+    
+};
+
+var extractFile = (file, courseName, version) => {
     var filename = file.filename;
+    const basePath = __dirname + '/resources/';
+    var filePath;
+    var versionPath;
+
     try{
         filename = filename.split('.').slice(0, -1).join('.');
+        filePath = basePath + courseName+'/'+version + '/' + filename;
+        versionPath = basePath + courseName+'/'+version;
+        deleteFolder(versionPath);
+        
     }catch(error) {
+        return new Promise((resolve, reject) => {
+            reject({message: ' file deletion is failed to update the content '});
+        });
     }
-    const dir = __dirname + '/resources/' + filename;
-
+    
     return new Promise((resolve, reject) => {
-        fs.createReadStream(file.path).pipe(unzip.Extract({path: dir}))
+        fs.createReadStream(file.path).pipe(unzip.Extract({path: filePath}))
         .on('close', () => {
+            resolve({msg: 'done', path: filePath});
+        })
+        .on('error', () => {
+            reject({msg: error});
         });
     });
 };
@@ -65,7 +99,6 @@ app.get('/',function(req,res){
 // register endpoints quickly to test
 
 app.get('/lrs/api/test/connection', (req, res) => {
-    console.log(' filename '+ req);
     res.json({name: 'Karunakar Medamoni '});
 });
 
@@ -88,16 +121,16 @@ app.post('/lrs/api/octet/parser', octetStreamParser, (req, res, next) => {
  * File upload and extract into resource folder. 
  */
 app.post('/lrs/api/file/upload', uploadFile.single('file'), (req, res, next) => {
-    console.log(' Inside of file upload ');
+
     var finalError = new Error("File upload failed ");
     finalError.httpStatusCode = 400;
-        if(!req.file) {
-            finalError = new Error(" File upload failed. No file selected ");
-            return next(error);
+        if(!req.file || !req.query.courseid || !req.query.version) {
+            finalError = new Error(" File upload failed. following are missing file, courseid, version ");
+            return next(finalError);
         }
         try {
             // add logic to create folder structure.. Send course number and version number.
-            extractFile(req.file).then((data) => {
+            extractFile(req.file, req.query.courseid, req.query.version).then((data) => {
                return res.send(data); 
             }, (error) => {
                 return next(error);
@@ -105,7 +138,7 @@ app.post('/lrs/api/file/upload', uploadFile.single('file'), (req, res, next) => 
         }catch(error) {
             return next(finalError);
         }    
-        return res.send({});
+        //return res.send({});
 });
 
 app.listen(appPort, () => {
