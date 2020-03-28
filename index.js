@@ -72,7 +72,9 @@ var extractFile = (file, courseName, version) => {
     return new Promise((resolve, reject) => {
         fs.createReadStream(file.path).pipe(unzip.Extract({path: filePath}))
         .on('close', () => {
-            resolve({msg: 'done', path: filePath});
+            const resourcePath = '/resources/'+ courseName + '/' + version + '/' + filename;
+            fs.unlinkSync(__dirname + '/uploads/' + file.filename) ;
+            resolve({msg: 'done', path: resourcePath});
         })
         .on('error', () => {
             reject({msg: error});
