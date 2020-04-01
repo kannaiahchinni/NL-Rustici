@@ -126,13 +126,14 @@ app.post('/lrs/api/file/upload', uploadFile.single('file'), (req, res, next) => 
 
     var finalError = new Error("File upload failed ");
     finalError.httpStatusCode = 400;
+	
         if(!req.file || !req.query.courseid || !req.query.version) {
             finalError = new Error(" File upload failed. following are missing file, courseid, version ");
             return next(finalError);
         }
         try {
             // add logic to create folder structure.. Send course number and version number.
-            extractFile(req.file, req.query.courseid, req.query.version).then((data) => {
+            extractFile(req.file, req.query.courseid, parseInt(req.query.version)).then((data) => {
                return res.send(data); 
             }, (error) => {
                 return next(error);
