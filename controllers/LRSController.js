@@ -20,7 +20,7 @@ exports.addState = (req, res, next) => {
     const percentage = JSON.parse(lzwCompress.unpack(data.d));
 
     const url = serviceNowUrl+ stateUrl + '?'+ params.join('&');
-    request(url, {method: 'PUT', body: {body: req.rawBody, progress: percentage}}, (error, res, body) => {
+    request(url, {method: 'PUT', body: {body: req.rawBody, progress: percentage}}, (error, ress, body) => {
         if(error) {
             res.next(error);
         }
@@ -31,7 +31,7 @@ exports.addState = (req, res, next) => {
 exports.getState = (req, res, next) => {
 
     const url = serviceNowUrl+ stateUrl + '?stateId='+ req.query.stateId+'&registration='+ req.query.registration;
-    request(url, (err, res, body) => {
+    request(url, (err, ress, body) => {
         if(req.query.stateId === 'cumulative_time') {
             res.setHeader('content-type', 'application/octet-stream');
             res.json(data);
@@ -50,7 +50,7 @@ exports.getState = (req, res, next) => {
 
 exports.addStatement = (req, res, next ) => {
     const url = serviceNowUrl + statementUrl;
-    request(url, {method: 'PUT', body: req.body}, (err, res, body) => {
+    request(url, {method: 'PUT', body: req.body}, (err, ress, body) => {
         if(error) {
             console.log(error);
             res.next(error);
