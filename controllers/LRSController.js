@@ -51,7 +51,8 @@ exports.getState = (req, res, next) => {
             res.setHeader('content-type', 'application/octet-stream');
             res.send(body.result);
         }else if( req.query.stateId === 'suspend_data') {
-            res.json(JSON.parse(body.result));
+            var response = body.result !== "" ? body.result : {};
+            res.json(response);
         }
         if(error) {
             console.log(error);
