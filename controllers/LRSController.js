@@ -32,7 +32,7 @@ exports.addState = (req, res, next) => {
     /*if(!req.rawBody ) {
         console.log(JSON.parse(lzwCompress.unpack(data.d)));
     }*/
-    console.log(params.join("&"));
+    console.log(params);
     const url = serviceNowUrl+ stateUrl; // + '?'+ params.join('&');
     const body = JSON.stringify({body: req.rawBody, progress: percentage});
     request(url, {method: 'PUT', qs:params, body: body}, (error, ress, body) => {
