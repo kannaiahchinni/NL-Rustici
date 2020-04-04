@@ -24,7 +24,7 @@ exports.addState = (req, res, next) => {
     params.content_endpoint=  req.query.content_endpoint;
 
     var percentage = ''; 
-    if(!req.query.stateId ) {
+    if(req.query.stateId === 'suspend_data') {
         const data = JSON.parse(req.rawBody);
         percentage = JSON.parse(lzwCompress.unpack(data.d));
     }
@@ -43,6 +43,7 @@ exports.getState = (req, res, next) => {
 
     const url = serviceNowUrl+ stateUrl + '?stateId='+ req.query.stateId+'&registration='+ req.query.registration;
     request(url, (error, ress, body) => {
+        console.log(body);
         if(req.query.stateId === 'cumulative_time') {
             res.setHeader('content-type', 'application/octet-stream');
             res.json(body);
@@ -50,7 +51,8 @@ exports.getState = (req, res, next) => {
             res.setHeader('content-type', 'application/octet-stream');
             res.send(body);
         }else if( req.query.stateId === 'suspend_data') {
-            res.json(body);
+            var data = JSON.parse(body);
+            res.json(JSON.stringify(data.result));
         }
         if(error) {
             console.log(error);
