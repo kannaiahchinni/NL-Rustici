@@ -31,7 +31,7 @@ exports.addState = (req, res, next) => {
 exports.getState = (req, res, next) => {
 
     const url = serviceNowUrl+ stateUrl + '?stateId='+ req.query.stateId+'&registration='+ req.query.registration;
-    request(url, (err, ress, body) => {
+    request(url, (error, ress, body) => {
         if(req.query.stateId === 'cumulative_time') {
             res.setHeader('content-type', 'application/octet-stream');
             res.json(data);
@@ -50,7 +50,7 @@ exports.getState = (req, res, next) => {
 
 exports.addStatement = (req, res, next ) => {
     const url = serviceNowUrl + statementUrl;
-    request(url, {method: 'PUT', body: req.body}, (err, ress, body) => {
+    request(url, {method: 'PUT', body: req.body}, (error, ress, body) => {
         if(error) {
             console.log(error);
             res.next(error);
