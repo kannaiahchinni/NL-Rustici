@@ -7,13 +7,23 @@ const statementUrl= '/statements';
 
 exports.addState = (req, res, next) => {
 
-    const params = [];
+    /*const params = [];
     params.push('stateId='+ req.query.stateId);
     params.push('agent='+ req.query.agent);
     params.push('activityId='+ req.query.activityId);
     params.push('registrationId='+ req.query.registration);
     params.push('externalRegistration='+ req.query.externalRegistration);
-    params.push('content_endpoint='+ req.query.content_endpoint);
+    params.push('content_endpoint='+ req.query.content_endpoint); */
+
+    const params ={};
+    params.stateId= req.query.stateId;
+    params.agent=req.query.agent;
+    params.activityId= req.query.activityId;
+    params.registration= req.query.registration;
+    params.externalRegistration= req.query.externalRegistration;
+    params.content_endpoint=  req.query.content_endpoint;
+
+
 
     //const data = JSON.parse(req.rawBody);
     //console.log(req.raw);
@@ -23,9 +33,9 @@ exports.addState = (req, res, next) => {
         console.log(JSON.parse(lzwCompress.unpack(data.d)));
     }*/
     console.log(params.join("&"));
-    const url = serviceNowUrl+ stateUrl + '?'+ params.join('&');
+    const url = serviceNowUrl+ stateUrl; // + '?'+ params.join('&');
     const body = JSON.stringify({body: req.rawBody, progress: percentage});
-    request(url, {method: 'PUT', body: body}, (error, ress, body) => {
+    request(url, {method: 'PUT', qs:params, body: body}, (error, ress, body) => {
         //console.log(ress);
         //console.log(body);
         if(error) {
