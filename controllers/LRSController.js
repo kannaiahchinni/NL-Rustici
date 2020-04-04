@@ -15,9 +15,10 @@ exports.addState = (req, res, next) => {
     params.push('externalRegistration='+ req.query.externalRegistration);
     params.push('content_endpoint='+ req.query.content_endpoint);
 
-    const data = JSON.parse(req.rawBody);
+    //const data = JSON.parse(req.rawBody);
+    console.log(req.rawBody);
 
-    const percentage = JSON.parse(lzwCompress.unpack(data.d));
+    //const percentage = JSON.parse(lzwCompress.unpack(data.d));
 
     const url = serviceNowUrl+ stateUrl + '?'+ params.join('&');
     request(url, {method: 'PUT', body: {body: req.rawBody, progress: percentage}}, (error, ress, body) => {
