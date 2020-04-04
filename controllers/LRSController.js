@@ -43,6 +43,7 @@ exports.getState = (req, res, next) => {
 
     const url = serviceNowUrl+ stateUrl + '?stateId='+ req.query.stateId+'&registration='+ req.query.registration;
     request(url, (error, ress, body) => {
+        console.log(body);
         var data = body.result !== "" ? body.result: "";
         console.log(data);
         if(req.query.stateId === 'cumulative_time') {
