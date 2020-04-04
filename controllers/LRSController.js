@@ -16,18 +16,18 @@ exports.addState = (req, res, next) => {
     params.push('content_endpoint='+ req.query.content_endpoint);
 
     //const data = JSON.parse(req.rawBody);
-    console.log(req.raw);
+    //console.log(req.raw);
 
     const percentage = 0; //JSON.parse(lzwCompress.unpack(data.d)) ;
-    /*if(!req.rawBody.isNan()) {
+    /*if(!req.rawBody ) {
         console.log(JSON.parse(lzwCompress.unpack(data.d)));
     }*/
-
+    console.log(params.join("&"));
     const url = serviceNowUrl+ stateUrl + '?'+ params.join('&');
     const body = JSON.stringify({body: req.rawBody, progress: percentage});
     request(url, {method: 'PUT', body: body}, (error, ress, body) => {
-        console.log(ress);
-        console.log(body);
+        //console.log(ress);
+        //console.log(body);
         if(error) {
             res.next(error);
         }
