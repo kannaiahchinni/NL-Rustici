@@ -44,15 +44,17 @@ exports.getState = (req, res, next) => {
     const url = serviceNowUrl+ stateUrl + '?stateId='+ req.query.stateId+'&registration='+ req.query.registration;
     request(url, (error, ress, body) => {
         var data = body.result !== "" ? body.result: "";
+        console.log(data);
         if(req.query.stateId === 'cumulative_time') {
             res.setHeader('content-type', 'application/octet-stream');
-            res.json(data);
+            if(data === "") { res.send(data) } else { res.json(data) };
+            
         }else if(req.query.stateId === 'bookmark') {
             res.setHeader('content-type', 'application/octet-stream');
-            res.send(data);
+            if(data === "") { res.send(data) } else { res.json(data) };
         }else if( req.query.stateId === 'suspend_data') {
             //var response = body.result !== "" ? body.result : {};
-            if(data === "") { res.json(data) } else { res.send(data) };
+            if(data === "") { res.send(data) } else { res.json(data) };
         }
         if(error) {
             console.log(error);
