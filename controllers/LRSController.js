@@ -46,13 +46,13 @@ exports.getState = (req, res, next) => {
         console.log(body);
         if(req.query.stateId === 'cumulative_time') {
             res.setHeader('content-type', 'application/octet-stream');
-            res.send(body.result);
+            res.send(body);
         }else if(req.query.stateId === 'bookmark') {
             res.setHeader('content-type', 'application/octet-stream');
-            res.send(body.result);
+            res.send(body);
         }else if( req.query.stateId === 'suspend_data') {
             var response = body.result !== "" ? body.result : {};
-            res.json(response);
+            res.json(body);
         }
         if(error) {
             console.log(error);
