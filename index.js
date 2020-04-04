@@ -1,10 +1,9 @@
 const express = require('express');
-const session = require('express-session');
 const multer = require('multer');
 const bodyParser = require('body-parser');
-const xml2js = require('xml2js');
 const fs = require('fs');
 const unzip = require('unzip2');
+const LRSController = require('./controllers/LRSController');
 
 
 const appPort = 3000;
@@ -89,7 +88,7 @@ var octetStreamParser =  bodyParser.raw({
     type: 'application/octet-stream',
     verify: function(req, res, buf, encoding) {
       req.rawBody = buf.toString(encoding || 'utf-8');
-  
+      console.log('Inside of octetStream ');
   }
   });
 
@@ -143,6 +142,16 @@ app.post('/lrs/api/file/upload', uploadFile.single('file'), (req, res, next) => 
         }    
         //return res.send({});
 });
+
+/**
+ *  State related end points
+ */
+
+
+app.put('/engine/lrs/activities/state', octetStreamParser, LRSController.addState);
+app.get('/engine/lrs/activities/state',octetStreamParser, LRSController.getState);
+app.get('/engine/lrs/statements', LRSController.getStatement);
+app.put('/engine/lrs/statements',  LRSController.addStatement);
 
 app.listen(appPort, () => {
     console.log('running application ');
